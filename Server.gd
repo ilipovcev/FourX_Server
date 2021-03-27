@@ -1,9 +1,5 @@
 extends Node
 
-
-var PlayerData : = preload("res://PlayerData.gd") as Script;
-tool
-
 var network = NetworkedMultiplayerENet.new()
 const SERVER_PORT = 1909
 const MAX_PLAYERS = 4
@@ -33,10 +29,6 @@ func _Peer_Disconnected(id):
 
 remote func RegPlayer(name):
 	var idPlayer = get_tree().get_rpc_sender_id()
-	var player = PlayerData.new();
-	player.peer_id = idPlayer;
-	player.nick = name;
-	players.push_front(player);
 	var playerStr = [idPlayer, name]
 	rpc("OnRegPlayer", playerStr);
 	
