@@ -47,7 +47,18 @@ remote func PlayerStatsChanged(HP):
 	FindPlayer.PlayerId = idPlayer
 	var indexPlayer = players.find(FindPlayer.PlayerId)
 	players[indexPlayer].PlayerHP = HP
-	
+
 	print("Player ", players[indexPlayer].PlayerName, " HP: ", players[indexPlayer].PlayerHP)
 
+
+remote func PlayerWin():
+	var idPlayer = get_tree().get_rpc_sender_id()
+	var FindPlayer = PlayerDataServer.new()
+
+	FindPlayer.PlayerId = idPlayer
+	var indexPlayer = players.find(FindPlayer.PlayerId)
+	players[indexPlayer].PlayerIsWin = true
+
+	rpc("getWinner", players[indexPlayer].PlayerName)
+	print("Player ", players[indexPlayer].PlayerName, " is winner")
 	
