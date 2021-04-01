@@ -2,5 +2,8 @@ extends Node
 
 class_name PlayerDataServer
 
-export(int) var peer_id
-export(String) var nick
+var PlayerId: int
+var PlayerName: String
+var PlayerHP: int
+var PlayerIsWin: bool
+ 

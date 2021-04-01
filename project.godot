@@ -10,12 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "PlayerData",
+"class": "PlayerDataServer",
 "language": "GDScript",
-"path": "res://PlayerData.gd"
+"path": "res://PlayerDataServer.gd"
 } ]
 _global_script_class_icons={
-"PlayerData": ""
+"PlayerDataServer": ""
 }
 
 [application]
