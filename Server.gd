@@ -64,6 +64,10 @@ remote func IsRoll():
 
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var Player = GetPlayerById(idPlayer);
+
+	if Player.IsLoose == true:
+		return
+	
 	if Player.IsTurn == true:
 		rpc_id(idPlayer, "SetRoll", -1)
 		return
@@ -75,9 +79,13 @@ remote func IsRoll():
 remote func DecHP():
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var Player = GetPlayerById(idPlayer);
+
+	if Player.IsLoose == true:
+		return
+	
 	Player.HP -= 1
 	Player.IsTurn = false
-
+	
 	if Player.HP <= 0:
 		Player.IsLoose = true
 		rpc("OnPlayerLoose", Player.Name, Player.Id)
@@ -91,6 +99,10 @@ remote func DecHP():
 remote func IncHP():
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var Player = GetPlayerById(idPlayer);
+
+	if Player.IsLoose == true:
+		return
+	
 	Player.HP += 1
 	Player.IsTurn = false
 	
@@ -102,6 +114,10 @@ remote func PlayerWin():
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var Player = GetPlayerById(idPlayer);
 
+	if Player.IsLoose == true:
+		return
+	
+	Player.IsWin = true
 	rpc("getWinner",  Player.Name)
 	print("Player ", Player.Name, " is winner")
 	
