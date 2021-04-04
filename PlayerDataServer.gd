@@ -2,8 +2,10 @@ extends Node
 
 class_name PlayerDataServer
 
-var PlayerId: int
-var PlayerName: String
-var PlayerHP: int
-var PlayerIsWin: bool
+var Id: int
+var Name: String
+var HP: int
+var IsWin: bool
+var IsTurn: bool
+var IsLoose: bool
  

@@ -5,9 +5,14 @@ const SERVER_PORT = 1909
 const MAX_PLAYERS = 4
 
 var players: Array;
+var pls_map = {};
 
 func _ready():
 	startServer()
+
+
+func GetPlayerById(PlId):
+	return players[pls_map[PlId]];
 
 
 func startServer():
@@ -25,40 +30,82 @@ func _Peer_Connected(id):
 	
 func _Peer_Disconnected(id):
 	print("User ", id, " disconnected")
+	var Player = GetPlayerById(id);
+	rpc("PlayerLeftGame", Player.Name)
+	players.erase(Player)
+
 
 remote func RegPlayer(name):
 	var idPlayer = get_tree().get_rpc_sender_id()
-	var playerStr = [idPlayer, name]
-
 	var RegisterPlayer = PlayerDataServer.new()
-	RegisterPlayer.PlayerId = idPlayer
-	RegisterPlayer.PlayerName = name
-	RegisterPlayer.PlayerHP = 4
-	RegisterPlayer.PlayerIsWin = false
+	RegisterPlayer.Id = idPlayer
+	RegisterPlayer.Name = name
+	RegisterPlayer.HP = 4
+	RegisterPlayer.IsWin = false
+	RegisterPlayer.IsTurn = false
+	RegisterPlayer.IsLoose = false
 	players.append(RegisterPlayer)
+	pls_map[RegisterPlayer.Id] = players.size()-1;
 
-	rpc_id(idPlayer, "OnRegPlayer", playerStr);
+	rpc_id(idPlayer, "OnRegPlayer", RegisterPlayer.Id, RegisterPlayer.Name, RegisterPlayer.HP);
+	rpc_id(idPlayer, "PlayerSpawnPoint", players.find(RegisterPlayer)+1)
 
-	
-remote func PlayerStatsChanged(HP):
+	print("Players count: ", players.size())
+	for i in players:
+		print(i.Name)
+	if players.size() == MAX_PLAYERS:
+		PlayersDone()
+
+
+remote func IsRoll():
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var steps_number = rng.randi_range(1, 6)
+
 	var idPlayer = get_tree().get_rpc_sender_id()
-	var FindPlayer = PlayerDataServer.new()
+	var Player = GetPlayerById(idPlayer);
+	if Player.IsTurn == true:
+		rpc_id(idPlayer, "SetRoll", -1)
+		return
+	
+	Player.IsTurn = true
+	rpc_id(idPlayer, "SetRoll", steps_number)
 
-	FindPlayer.PlayerId = idPlayer
-	var indexPlayer = players.find(FindPlayer.PlayerId)
-	players[indexPlayer].PlayerHP = HP
 
-	print("Player ", players[indexPlayer].PlayerName, " HP: ", players[indexPlayer].PlayerHP)
+remote func DecHP():
+	var idPlayer = get_tree().get_rpc_sender_id()
+	var Player = GetPlayerById(idPlayer);
+	Player.HP -= 1
+	Player.IsTurn = false
+
+	if Player.HP <= 0:
+		Player.IsLoose = true
+		rpc("OnPlayerLoose", Player.Name, Player.Id)
+		rpc_id(idPlayer, "LooseGame")
+		return
+
+	print("Player ", Player.Name, " HP: ", Player.HP)
+	rpc_id(idPlayer, "SetPlayerHP", Player.HP)
+
+
+remote func IncHP():
+	var idPlayer = get_tree().get_rpc_sender_id()
+	var Player = GetPlayerById(idPlayer);
+	Player.HP += 1
+	Player.IsTurn = false
+	
+	print("Player ", Player.Name, " HP: ", Player.HP)
+	rpc_id(idPlayer, "SetPlayerHP", Player.HP)
 
 
 remote func PlayerWin():
 	var idPlayer = get_tree().get_rpc_sender_id()
-	var FindPlayer = PlayerDataServer.new()
+	var Player = GetPlayerById(idPlayer);
 
-	FindPlayer.PlayerId = idPlayer
-	var indexPlayer = players.find(FindPlayer.PlayerId)
-	players[indexPlayer].PlayerIsWin = true
-
-	rpc("getWinner", players[indexPlayer].PlayerName)
-	print("Player ", players[indexPlayer].PlayerName, " is winner")
+	rpc("getWinner",  Player.Name)
+	print("Player ", Player.Name, " is winner")
 	
+
+func PlayersDone():
+	print("All players connected")
+	#rpc("StartGame")
