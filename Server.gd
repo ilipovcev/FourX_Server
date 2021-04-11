@@ -7,9 +7,15 @@ const MAX_PLAYERS = 4
 var players: Array;
 var pls_map = {};
 
+
 func _ready():
 	startServer()
 
+
+func ScreenText(text):
+	get_node("Console/ConsoleText").add_text(text)
+	get_node("Console/ConsoleText").newline()
+	
 
 func GetPlayerById(PlId):
 	return players[pls_map[PlId]];
@@ -19,6 +25,7 @@ func startServer():
 	network.create_server(SERVER_PORT, MAX_PLAYERS)
 	get_tree().set_network_peer(network)
 	print("Server started")
+	ScreenText("Server started")
 
 	network.connect("peer_connected", self, "_Peer_Connected")
 	network.connect("peer_disconnected", self, "_Peer_Disconnected")
@@ -30,6 +37,7 @@ func _Peer_Connected(id):
 	
 func _Peer_Disconnected(id):
 	print("User ", id, " disconnected")
+	ScreenText("User " + String(id) + " disconnected")
 	var Player = GetPlayerById(id);
 	rpc("PlayerLeftGame", Player.Name)
 	players.erase(Player)
@@ -51,6 +59,7 @@ remote func RegPlayer(name):
 	rpc_id(idPlayer, "PlayerSpawnPoint", players.find(RegisterPlayer)+1)
 
 	print("Players count: ", players.size())
+	ScreenText("Players count: " + String(players.size()))
 	for i in players:
 		print(i.Name)
 	if players.size() == MAX_PLAYERS:
@@ -63,12 +72,9 @@ remote func IsRoll():
 	var steps_number = rng.randi_range(1, 6)
 
 	var idPlayer = get_tree().get_rpc_sender_id()
-	var Player = GetPlayerById(idPlayer);
-
-	if Player.IsLoose == true:
-		return
+	var Player = GetPlayerById(idPlayer)
 	
-	if Player.IsTurn == true:
+	if Player.IsTurn == true or Player.IsLoose == true:
 		rpc_id(idPlayer, "SetRoll", -1)
 		return
 	
@@ -93,6 +99,7 @@ remote func DecHP():
 		return
 
 	print("Player ", Player.Name, " HP: ", Player.HP)
+	ScreenText("Player " + Player.Name + " HP: " + String(Player.HP))
 	rpc_id(idPlayer, "SetPlayerHP", Player.HP)
 
 
@@ -107,6 +114,7 @@ remote func IncHP():
 	Player.IsTurn = false
 	
 	print("Player ", Player.Name, " HP: ", Player.HP)
+	ScreenText("Player " + Player.Name + " HP: " + String(Player.HP))
 	rpc_id(idPlayer, "SetPlayerHP", Player.HP)
 
 
@@ -120,8 +128,10 @@ remote func PlayerWin():
 	Player.IsWin = true
 	rpc("getWinner",  Player.Name)
 	print("Player ", Player.Name, " is winner")
+	ScreenText("Player " + Player.Name + " is winner")
 	
 
 func PlayersDone():
 	print("All players connected")
+	ScreenText("All players connected")
 	#rpc("StartGame")
