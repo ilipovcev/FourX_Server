@@ -1,0 +1,13 @@
+{
+    "Size": [4, 2],
+    "Cells": [
+        ["Cell", "CellDamage"],
+        [["Cell", "CellDamage"], "Cell"],
+        ["Cell", "CellDamage"],
+        ["CellArmor", "CellArmor"]
+    ],
+    "Roads": [
+        [[1, 0], [1, 1], [0, 2]],
+        [[0, 0], [0, 1], [0, 2]]
+    ]
+}

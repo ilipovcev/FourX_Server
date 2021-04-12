@@ -18,6 +18,27 @@ var player_path_4 = []
 
 
 func _ready():
+	var map: Map = Map.new();
+	map.LoadFromFile("TestMap.json");
+	
+	var ms: Vector2 = map.GetSize();
+	var st: String;
+	for i in range(ms.y):
+		st = "[";
+		for j in range(ms.x):
+			st += map.GetCell(j, i).GetType() + ", ";
+		st += "]";
+		ScreenText(st);
+	
+	var pl: Player = Player.new();
+	pl.SetName("ArKaNeMaN");
+	
+	map.GetCell(2, 0).OnStepOn(pl);
+	map.GetCell(1, 0).OnStepOn(pl);
+	map.GetCell(1, 1).OnStepOn(pl);
+	
+	return;
+	
 	for y in range(matrix_height):
 		matrix_map.append([])
 		matrix_map[y].resize(matrix_width)

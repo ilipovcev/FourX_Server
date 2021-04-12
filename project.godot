@@ -9,10 +9,35 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node",
+"base": "Reference",
+"class": "Cell",
+"language": "GDScript",
+"path": "res://World/Cell.gd"
+}, {
+"base": "Cell",
+"class": "CellArmor",
+"language": "GDScript",
+"path": "res://World/Cells/CellArmor.gd"
+}, {
+"base": "Cell",
+"class": "CellDamage",
+"language": "GDScript",
+"path": "res://World/Cells/CellDamage.gd"
+}, {
+"base": "Reference",
+"class": "Map",
+"language": "GDScript",
+"path": "res://World/Map.gd"
+}, {
+"base": "Reference",
 "class": "PathCoord",
 "language": "GDScript",
 "path": "res://PathCoord.gd"
+}, {
+"base": "Reference",
+"class": "Player",
+"language": "GDScript",
+"path": "res://World/Player.gd"
 }, {
 "base": "Node",
 "class": "PlayerDataServer",
@@ -20,7 +45,12 @@ _global_script_classes=[ {
 "path": "res://PlayerDataServer.gd"
 } ]
 _global_script_class_icons={
+"Cell": "",
+"CellArmor": "",
+"CellDamage": "",
+"Map": "",
 "PathCoord": "",
+"Player": "",
 "PlayerDataServer": ""
 }
 
