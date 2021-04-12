@@ -4,7 +4,7 @@
 [ext_resource path="res://Fonts/NewTegomin-Regular.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
-size = 35
+size = 25
 font_data = ExtResource( 2 )
 
 [node name="Server" type="Node"]
@@ -30,3 +30,6 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/normal_font = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

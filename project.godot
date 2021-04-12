@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
+"class": "PathCoord",
+"language": "GDScript",
+"path": "res://PathCoord.gd"
+}, {
+"base": "Node",
 "class": "PlayerDataServer",
 "language": "GDScript",
 "path": "res://PlayerDataServer.gd"
 } ]
 _global_script_class_icons={
+"PathCoord": "",
 "PlayerDataServer": ""
 }
 

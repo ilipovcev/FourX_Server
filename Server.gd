@@ -4,12 +4,97 @@ var network = NetworkedMultiplayerENet.new()
 const SERVER_PORT = 1909
 const MAX_PLAYERS = 4
 
-var players: Array;
-var pls_map = {};
+var players: Array
+var pls_map = {}
+
+var matrix_map = []
+var matrix_width = 23
+var matrix_height = 13
+
+var player_path_1 = []
+var player_path_2 = []
+var player_path_3 = []
+var player_path_4 = []
 
 
 func _ready():
+	for y in range(matrix_height):
+		matrix_map.append([])
+		matrix_map[y].resize(matrix_width)
+
+	PlayerPath()
+	MapGenerator()
 	startServer()
+
+
+func UpdatePlayer1Path(x, y):
+	var cell_class = load("res://PathCoord.gd")
+	var Cell = cell_class.new()
+
+	Cell.X = x
+	Cell.Y = y
+	matrix_map[Cell.Y][Cell.X] = Cell
+	player_path_1.push_back(Cell)
+
+func PlayerPath():
+	UpdatePlayer1Path(0,6)
+	UpdatePlayer1Path(1,6)
+	UpdatePlayer1Path(1,7)
+	UpdatePlayer1Path(2,7)
+	UpdatePlayer1Path(2,7)
+	UpdatePlayer1Path(2,8)
+	UpdatePlayer1Path(2,9)
+	UpdatePlayer1Path(3,9)
+	UpdatePlayer1Path(4,9)
+	UpdatePlayer1Path(4,10)
+	UpdatePlayer1Path(5,10)
+	UpdatePlayer1Path(6,10)
+	UpdatePlayer1Path(6,9)
+	UpdatePlayer1Path(6,8)
+	UpdatePlayer1Path(6,7)
+	UpdatePlayer1Path(7,7)
+	UpdatePlayer1Path(8,7)
+	UpdatePlayer1Path(9,7)
+	UpdatePlayer1Path(9,6)
+	UpdatePlayer1Path(10,6)
+
+
+func MapGenerator():
+	var cell_class = load("res://PathCoord.gd")
+	var Cell = cell_class.new()
+	var matrix_map_visual = []
+
+	for y in range(matrix_height):
+		matrix_map_visual.append([])
+		matrix_map_visual[y].resize(matrix_width)
+	
+	ScreenText(String(range(matrix_width)))
+	for y in range(matrix_height):
+		for x in range(matrix_width):
+			if matrix_map[y][x]:
+				matrix_map_visual[y][x] = 1
+				continue
+			matrix_map_visual[y][x] = 0	
+
+			if y == 6 && x == 11:
+				matrix_map_visual[y][x] = 5
+		ScreenText(String(y) + String(matrix_map_visual[y]))
+
+	for y in range(matrix_height):
+		for x in range(matrix_width):
+			if matrix_map[y][x]:
+				matrix_map[y][x].IsPath = true
+				print("Path at: ", x, " ", y)
+				continue
+			Cell.X = x
+			Cell.Y = y
+			matrix_map[y][x] = Cell	
+
+			if y == 6 && x == 11:
+				Cell.X = x
+				Cell.Y = y
+				Cell.IsWin = true
+				matrix_map[y][x] = Cell
 
 
 func ScreenText(text):
