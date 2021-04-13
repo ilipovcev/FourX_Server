@@ -7,7 +7,7 @@ var Armor = 0;
 func OnTakeDamage(dmg: int):
 	if Armor > 0:
 		Armor -= 1;
-		print("Игрок ", Nick, " потерялединицу брони. (", Armor, "AP)");
+		print("Игрок ", Nick, " потерял единицу брони. (", Armor, "AP)");
 		return;
 	
 	Health -= dmg;

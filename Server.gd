@@ -6,6 +6,7 @@ const MAX_PLAYERS = 4
 
 var players: Array
 var pls_map = {}
+var GameMap: Map;
 
 var matrix_map = []
 var matrix_width = 23
@@ -18,24 +19,24 @@ var player_path_4 = []
 
 
 func _ready():
-	var map: Map = Map.new();
-	map.LoadFromFile("TestMap.json");
+	GameMap = Map.new();
+	GameMap.LoadFromFile("TestMap.json");
 	
-	var ms: Vector2 = map.GetSize();
+	var ms: Vector2 = GameMap.GetSize();
 	var st: String;
 	for i in range(ms.y):
 		st = "[";
 		for j in range(ms.x):
-			st += map.GetCell(j, i).GetType() + ", ";
+			st += GameMap.GetCell(j, i).GetType() + ", ";
 		st += "]";
 		ScreenText(st);
 	
 	var pl: Player = Player.new();
 	pl.SetName("ArKaNeMaN");
 	
-	map.GetCell(2, 0).OnStepOn(pl);
-	map.GetCell(1, 0).OnStepOn(pl);
-	map.GetCell(1, 1).OnStepOn(pl);
+	GameMap.GetCell(2, 0).OnStepOn(pl);
+	GameMap.GetCell(1, 0).OnStepOn(pl);
+	GameMap.GetCell(1, 1).OnStepOn(pl);
 	
 	return;
 	
@@ -138,7 +139,8 @@ func startServer():
 
 
 func _Peer_Connected(id):
-	print("User ", id, " connected")
+	print("User ", id, " connected");
+	rpc_id(id, "OnMapLoaded", GameMap.to_string());
 	
 	
 func _Peer_Disconnected(id):
