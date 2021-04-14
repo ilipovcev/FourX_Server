@@ -3,6 +3,7 @@ class_name Player
 var Health: int = 10;
 var Nick: String = "Unnamed";
 var Id: int;
+var Origin: Vector2;
 
 func OnTakeDamage(dmg: int):
 	Health -= dmg;
@@ -10,9 +11,9 @@ func OnTakeDamage(dmg: int):
 	if Health <= 0:
 		OnDeath();
 
-func OnGetHealth():
-	Health += 1;
-	print("Игрок ", Nick, " получил + 1хп. (", Health, "HP)" );
+func OnTakeHealth(hp: int):
+	Health += hp;
+	print("Игрок ", Nick, " получил ", hp, " здоровья. (", Health, "HP)" );
 
 func OnWin():
 	print("Игрок ", Nick, " выиграл.")
@@ -28,3 +29,11 @@ func GetName():
 
 func GetHealth():
 	return Health;
+	
+func SetOrigin(vec: Vector2):
+	Origin = vec;
+	# print("Игрок передвинут на координаты ", vec);
+	
+func GetOrigin():
+	# На клиенте надо плавно перемещать
+	return Origin;
