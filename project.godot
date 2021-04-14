@@ -25,6 +25,11 @@ _global_script_classes=[ {
 "path": "res://World/Cells/CellDamage.gd"
 }, {
 "base": "Cell",
+"class": "CellHealth",
+"language": "GDScript",
+"path": "res://World/Cells/CellHealth.gd"
+}, {
+"base": "Cell",
 "class": "CellWin",
 "language": "GDScript",
 "path": "res://World/Cells/CellWin.gd"
@@ -48,16 +53,23 @@ _global_script_classes=[ {
 "class": "PlayerDataServer",
 "language": "GDScript",
 "path": "res://PlayerDataServer.gd"
+}, {
+"base": "Reference",
+"class": "Road",
+"language": "GDScript",
+"path": "res://World/Road.gd"
 } ]
 _global_script_class_icons={
 "Cell": "",
 "CellArmor": "",
 "CellDamage": "",
+"CellHealth": "",
 "CellWin": "",
 "Map": "",
 "PathCoord": "",
 "Player": "",
-"PlayerDataServer": ""
+"PlayerDataServer": "",
+"Road": ""
 }
 
 [application]

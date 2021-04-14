@@ -1,9 +1,12 @@
 class_name Cell
 
-export var Coords: Vector2;
+var Coords: Vector2;
 
 func SetCoords(x, y):
 	Coords = Vector2(x, y);
+
+func GetCoords():
+	return Coords;
 
 # Наступил
 func OnStepOn(pl: Player):

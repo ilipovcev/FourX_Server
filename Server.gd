@@ -19,9 +19,25 @@ var player_path_4 = []
 
 
 func _ready():
-	GameMap = Map.new();
-	GameMap.LoadFromFile("MapAbout.json");
+	if !LoadMap():
+		ScreenText("Can`t load map.");
+		return;
+	PrintMap();
 	
+	var pl: Player = Player.new();
+	pl.SetName("ArKaNeMaN"); # :))
+	
+	GameMap.SetPlayer(0, pl);
+	GameMap.MovePlayer(0, 3);
+	GameMap.MovePlayer(0, 2);
+	
+	startServer();
+
+func LoadMap():
+	GameMap = Map.new();
+	return GameMap.LoadFromFile("MapAbout.json");
+
+func PrintMap():
 	var ms: Vector2 = GameMap.GetSize();
 	var st: String;
 	for i in range(ms.y):
@@ -30,15 +46,6 @@ func _ready():
 			st += GameMap.GetCell(j, i).GetType() + ", ";
 		st += "]";
 		ScreenText(st);
-	
-	var pl: Player = Player.new();
-	pl.SetName("ilipa");
-	
-	GameMap.GetCell(2, 0).OnStepOn(pl);
-	GameMap.GetCell(1, 0).OnStepOn(pl);
-	GameMap.GetCell(1, 1).OnStepOn(pl);
-	startServer()
-
 
 func ScreenText(text):
 	get_node("Console/ConsoleText").add_text(text)

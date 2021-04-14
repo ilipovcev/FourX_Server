@@ -1,5 +1,4 @@
 extends Cell
-
 class_name CellWin
 
 func OnStepOn(pl: Player):
