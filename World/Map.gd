@@ -3,7 +3,8 @@ class_name Map
 var CELL_TYPES: Dictionary = {
 	"Cell": Cell,
 	"CellDamage": CellDamage,
-	"CellArmor": CellArmor,
+	"CellHealth": CellHealth,
+	"CellWin": CellWin,
 };
 
 var Matrix = [];
@@ -32,7 +33,6 @@ func LoadFromJson(map: JSONParseResult):
 		var row: Array;
 		row.resize(res['Size'][1]);
 		for j in range(res['Size'][1]):
-			
 			var s: String;
 			if typeof(res['Cells'][i][j]) == TYPE_ARRAY:
 				randomize();
@@ -49,8 +49,7 @@ func LoadFromJson(map: JSONParseResult):
 		Matrix[i] = row;
 	
 	jMap = res;
-	print(to_string());
-	print("Карта размером ", res['Size'][0], " на ", res['Size'][1], " загружена.");
+	#print(to_string());
 	Init();
 
 func LoadFromJsonStr(map: String):
@@ -65,6 +64,8 @@ func LoadFromFile(filename: String):
 	
 func Init():
 	print("Инициализация мира..."); 
+	print("Карта размером ", Size.x, " на ", Size.y, " загружена.");
+
 
 func GetCell(i, j: int):
 	return Matrix[i][j];

@@ -2,21 +2,20 @@ class_name Player
 
 var Health: int = 10;
 var Nick: String = "Unnamed";
-var Armor = 0;
+var Id: int;
 
 func OnTakeDamage(dmg: int):
-	if Armor > 0:
-		Armor -= 1;
-		print("Игрок ", Nick, " потерял единицу брони. (", Armor, "AP)");
-		return;
-	
 	Health -= dmg;
 	print("Игрок ", Nick, " получил ", dmg, " урона. (", Health, "HP)");
 	if Health <= 0:
 		OnDeath();
-		
-func AddArmor(armor: int):
-	Armor += armor;
+
+func OnGetHealth():
+	Health += 1;
+	print("Игрок ", Nick, " получил + 1хп. (", Health, "HP)" );
+
+func OnWin():
+	print("Игрок ", Nick, " выиграл.")
 	
 func OnDeath():
 	print("Игрок ", Nick, " умер.");
