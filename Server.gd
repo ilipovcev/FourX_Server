@@ -14,15 +14,7 @@ func _ready():
 		return;
 	PrintMap();
 	
-	var pl: Player = Player.new();
-	pl.SetName("ArKaNeMaN"); # :))
 	
-	GameMap.SetPlayer(0, pl);
-	GameMap.MovePlayer(0, 1);
-	GameMap.MovePlayer(0, 1);
-	GameMap.MovePlayer(0, 1);
-	GameMap.MovePlayer(0, 1);
-	GameMap.MovePlayer(0, 1);
 	
 	startServer();
 
@@ -79,9 +71,9 @@ remote func RegPlayer(name):
 	players.append(pl);
 	pls_map[pl.Id] = players.size()-1;
 
-	GameMap.SetPlayer(players.size(), pl);
+	GameMap.SetPlayer(players.size()-1, pl);
 	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
-	pl = GameMap.GetPlayer(players.size());
+	pl = GameMap.GetPlayer(players.size()-1);
 	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin());
 	print("Players count: ", players.size())
 	ScreenText("Players count: " + String(players.size()))
