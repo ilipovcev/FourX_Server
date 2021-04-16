@@ -27,6 +27,9 @@ func SetName(name: String):
 func GetName():
 	return Nick;
 
+func SetHealth(hp):
+	Health = hp;
+
 func GetHealth():
 	return Health;
 	
@@ -37,3 +40,9 @@ func SetOrigin(vec: Vector2):
 func GetOrigin():
 	# На клиенте надо плавно перемещать
 	return Origin;
+
+func SetId(id):
+	Id = id;
+
+func GetId():
+	return Id;

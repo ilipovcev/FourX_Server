@@ -8,16 +8,6 @@ var players: Array
 var pls_map = {}
 var GameMap: Map;
 
-var matrix_map = []
-var matrix_width = 23
-var matrix_height = 13
-
-var player_path_1 = []
-var player_path_2 = []
-var player_path_3 = []
-var player_path_4 = []
-
-
 func _ready():
 	if !LoadMap():
 		ScreenText("Can`t load map.");
@@ -28,8 +18,11 @@ func _ready():
 	pl.SetName("ArKaNeMaN"); # :))
 	
 	GameMap.SetPlayer(0, pl);
-	GameMap.MovePlayer(0, 3);
-	GameMap.MovePlayer(0, 2);
+	GameMap.MovePlayer(0, 1);
+	GameMap.MovePlayer(0, 1);
+	GameMap.MovePlayer(0, 1);
+	GameMap.MovePlayer(0, 1);
+	GameMap.MovePlayer(0, 1);
 	
 	startServer();
 
@@ -68,7 +61,6 @@ func startServer():
 
 func _Peer_Connected(id):
 	print("User ", id, " connected");
-	rpc_id(id, "OnMapLoaded", GameMap.to_string());
 	
 	
 func _Peer_Disconnected(id):
@@ -82,12 +74,15 @@ func _Peer_Disconnected(id):
 remote func RegPlayer(name):
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = Player.new()
-	pl.Id = idPlayer
-	pl.SetName(name)
-	players.append(pl)
+	pl.SetId(idPlayer);
+	pl.SetName(name);
+	players.append(pl);
 	pls_map[pl.Id] = players.size()-1;
 
-	rpc_id(idPlayer, "OnRegPlayer", pl.Id, pl.GetName(), pl.GetHealth());
+	GameMap.SetPlayer(players.size(), pl);
+	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
+	pl = GameMap.GetPlayer(players.size());
+	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin());
 	print("Players count: ", players.size())
 	ScreenText("Players count: " + String(players.size()))
 	for i in players:
@@ -97,9 +92,12 @@ remote func RegPlayer(name):
 
 
 remote func IsRoll():
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	var steps_number = rng.randi_range(1, 6)
+	var rng = RandomNumberGenerator.new();
+	rng.randomize();
+	var steps_number = rng.randi_range(1, 6);
+	
+	var idPlayer = get_tree().get_rpc_sender_id()
+	var pl: Player = GetPlayerById(idPlayer);
 
 
 remote func PlayerWin():

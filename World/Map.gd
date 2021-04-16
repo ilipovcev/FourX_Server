@@ -12,6 +12,29 @@ var Size: Vector2;
 var jMap;
 var Roads: Array;
 var Players: Array;
+var rng = RandomNumberGenerator.new();
+
+func GenerateRoads(map):
+	var cells_array = ["CellDamage", "CellHealth"];
+	randomize();
+	map['Cells'][10][6] = 'CellWin';
+	map['Roads'][0].append([10, 0]);
+	map['Roads'][0].append([10, 1]);
+	map['Roads'][0].append([10, 2]);
+	map['Roads'][0].append([10, 3]);
+	map['Roads'][0].append([10, 4]);
+	map['Roads'][0].append([10, 5]);
+	map['Roads'][0].append([10, 6]);
+	for i in range(Size.x):
+		for j in range(Size.y):
+			map['Cells'][i][j] = "Cell";
+			for e in range(map['Roads'].size()):
+				for a in range(map['Roads'][e].size()):
+					if i == map['Roads'][e][a][0] && j == map['Roads'][e][a][1]:
+						map['Cells'][i][j] = cells_array[rng.randi_range(0, cells_array.size()-1)];
+						print(map['Cells'][i][j], " on ", map['Roads'][e][a])
+			
+
 
 func LoadFromJson(map):
 	Size = Vector2(map['Size'][0], map['Size'][1]);
@@ -21,6 +44,7 @@ func LoadFromJson(map):
 		return false;
 	
 	Matrix.resize(Size.x);
+	GenerateRoads(map);
 	for i in range(Size.x):
 		if map['Cells'][i].size() != Size.y:
 			print("АШИПКА. Кривой размер карты.");
@@ -28,7 +52,7 @@ func LoadFromJson(map):
 		
 		var row: Array = [];
 		row.resize(Size.y);
-		
+
 		for j in range(Size.y):
 			var s: String;
 			if typeof(map['Cells'][i][j]) == TYPE_ARRAY:
@@ -44,7 +68,7 @@ func LoadFromJson(map):
 			row[j].SetCoords(i, j);
 		
 		Matrix[i] = row;
-		
+	
 	var RoadsCount = map['Roads'].size();
 	Roads.resize(RoadsCount);
 	Players.resize(RoadsCount); # Сколько путей, столько и игроков
