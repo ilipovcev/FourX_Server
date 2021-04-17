@@ -14,12 +14,11 @@ func _ready():
 		return;
 	PrintMap();
 	
-	
-	
 	startServer();
 
 func LoadMap():
 	GameMap = Map.new();
+	GameMap.ResetPlayer();
 	return GameMap.LoadFromFile("MapAbout.json");
 
 func PrintMap():
@@ -74,7 +73,7 @@ remote func RegPlayer(name):
 	GameMap.SetPlayer(players.size()-1, pl);
 	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
 	pl = GameMap.GetPlayer(players.size()-1);
-	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin());
+	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin(), players.size()-1)
 	print("Players count: ", players.size())
 	ScreenText("Players count: " + String(players.size()))
 	for i in players:
@@ -86,23 +85,12 @@ remote func RegPlayer(name):
 remote func IsRoll():
 	var rng = RandomNumberGenerator.new();
 	rng.randomize();
-	var steps_number = rng.randi_range(1, 6);
+	var steps_number = rng.randi_range(1, 3);
 	
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);
-
-
-remote func PlayerWin():
-	var idPlayer = get_tree().get_rpc_sender_id()
-	var Player = GetPlayerById(idPlayer);
-
-	if Player.IsLoose == true:
-		return
-	
-	Player.IsWin = true
-	rpc("getWinner",  Player.Name)
-	print("Player ", Player.Name, " is winner")
-	ScreenText("Player " + Player.Name + " is winner")
+	GameMap.MovePlayer(players.find(pl), steps_number);
+	rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
 	
 
 func PlayersDone():
