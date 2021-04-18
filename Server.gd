@@ -85,7 +85,7 @@ remote func RegPlayer(name):
 remote func IsRoll():
 	var rng = RandomNumberGenerator.new();
 	rng.randomize();
-	var steps_number = rng.randi_range(1, 3);
+	var steps_number = rng.randi_range(1, 6);
 	
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);

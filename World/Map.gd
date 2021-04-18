@@ -18,21 +18,31 @@ func GenerateRoads(map):
 	var cells_array = ["CellDamage", "CellHealth"];
 	randomize();
 	map['Cells'][10][6] = 'CellWin';
-	map['Roads'][0].append([10, 0]);
-	map['Roads'][0].append([10, 1]);
-	map['Roads'][0].append([10, 2]);
-	map['Roads'][0].append([10, 3]);
-	map['Roads'][0].append([10, 4]);
-	map['Roads'][0].append([10, 5]);
-	map['Roads'][0].append([10, 6]);
 	for i in range(Size.x):
 		for j in range(Size.y):
 			for e in range(map['Roads'].size()):
 				for a in range(map['Roads'][e].size()-1):
 					if i == map['Roads'][e][a][0] && j == map['Roads'][e][a][1]:
 						map['Cells'][i][j] = cells_array[rng.randi_range(0, cells_array.size()-1)];
-						print(map['Cells'][i][j], " on ", map['Roads'][e][a])
-			
+						#print(map['Cells'][i][j], " on ", map['Roads'][e][a])
+	
+	for i in map['Roads'][3].size():
+		print(map['Cells'][map['Roads'][3][i][0]][map['Roads'][3][i][1]], " on ", map['Roads'][3][i]);
+
+func ConvertMatrixToList(map):
+	var adjList = [];
+	for i in range(Size.x):
+		adjList.append([]);
+		adjList[i].resize(Size.y);
+		for j in range(Size.y):
+			if map['Cells'][i][j]:
+				adjList[i].append(j);
+
+	#print(adjList[0]);
+	#print(adjList[1]);
+	#print(adjList[2]);
+	return adjList;
+				
 
 func LoadFromJson(map):
 	Size = Vector2(map['Size'][0], map['Size'][1]);
@@ -115,7 +125,7 @@ func MovePlayer(index: int, rng: int):
 
 func GetPlayersState():
 	var players_state: Array;
-	for pl: Player in Players:
+	for pl	 in Players:
 		players_state.append(pl.GetOrigin());
 	return players_state;
 
