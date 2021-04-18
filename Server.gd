@@ -55,40 +55,56 @@ func _Peer_Connected(id):
 	
 	
 func _Peer_Disconnected(id):
-	print("User ", id, " disconnected")
-	ScreenText("User " + String(id) + " disconnected")
-	var Player: Player = GetPlayerById(id);
-	rpc("PlayerLeftGame", Player.GetName())
-	players.erase(Player)
+	print("User ", id, " disconnected");
+	ScreenText("User " + String(id) + " disconnected");
+	var pl: Player = GetPlayerById(id);
+	rpc("PlayerLeftGame", pl.GetName());
+	players.erase(pl);
 
 
 remote func RegPlayer(name):
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = Player.new()
+
 	pl.SetId(idPlayer);
 	pl.SetName(name);
 	players.append(pl);
-	pls_map[pl.Id] = players.size()-1;
+	pls_map[pl.GetId()] = players.size()-1;
 
 	GameMap.SetPlayer(players.size()-1, pl);
 	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
 	pl = GameMap.GetPlayer(players.size()-1);
+	players[players.size()-1] = pl;
 	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin(), players.size()-1)
-	print("Players count: ", players.size())
-	ScreenText("Players count: " + String(players.size()))
+	rpc("get_states", get_players_state());
+
+	print("Players count: ", players.size());
+	ScreenText("Players count: " + String(players.size()));
+
 	for i in players:
-		print(i.GetName())
+		print(i.GetName());
 	if players.size() == MAX_PLAYERS:
-		PlayersDone()
+		PlayersDone();
+
+
+func get_players_state():
+	var states = [];
+	var i = 0;
+	while i <= players.size()-1:
+		states.append(GameMap.GetPlayerState(i));
+		i += 1;
+	print(states);
+	return states;
+
 
 
 remote func IsRoll():
 	var rng = RandomNumberGenerator.new();
 	rng.randomize();
 	var steps_number = rng.randi_range(1, 6);
-	
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);
+
 	GameMap.MovePlayer(players.find(pl), steps_number);
 	rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
 	

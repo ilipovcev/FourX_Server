@@ -40,19 +40,9 @@ _global_script_classes=[ {
 "path": "res://World/Map.gd"
 }, {
 "base": "Reference",
-"class": "PathCoord",
-"language": "GDScript",
-"path": "res://PathCoord.gd"
-}, {
-"base": "Reference",
 "class": "Player",
 "language": "GDScript",
 "path": "res://World/Player.gd"
-}, {
-"base": "Node",
-"class": "PlayerDataServer",
-"language": "GDScript",
-"path": "res://PlayerDataServer.gd"
 }, {
 "base": "Reference",
 "class": "Road",
@@ -66,9 +56,7 @@ _global_script_class_icons={
 "CellHealth": "",
 "CellWin": "",
 "Map": "",
-"PathCoord": "",
 "Player": "",
-"PlayerDataServer": "",
 "Road": ""
 }
 

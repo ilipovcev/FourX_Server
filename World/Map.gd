@@ -123,11 +123,10 @@ func GetRoad(index: int):
 func MovePlayer(index: int, rng: int):
 	return GetRoad(index).Move(GetPlayer(index), rng);
 
-func GetPlayersState():
-	var players_state: Array;
-	for pl	 in Players:
-		players_state.append(pl.GetOrigin());
-	return players_state;
+func GetPlayerState(player_index: int):
+	var pl = GetPlayer(player_index);
+	var player_state = [pl.GetName(), pl.GetId(), pl.GetOrigin(), pl.GetHealth()];
+	return player_state;
 
 func GetPlayer(index: int):
 	return Players[index];
