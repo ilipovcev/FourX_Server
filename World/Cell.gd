@@ -1,3 +1,4 @@
+extends Node
 class_name Cell
 
 var Coords: Vector2;

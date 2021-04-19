@@ -128,6 +128,23 @@ func GetPlayerState(player_index: int):
 	var player_state = [pl.GetName(), pl.GetId(), pl.GetOrigin(), pl.GetHealth()];
 	return player_state;
 
+func SetPlayerTurn(player_index: int):
+	GetPlayer(player_index).SetTurn(true);
+
+func GetPlayerTurn(player_index: int):
+	var pl = GetPlayer(player_index);
+	if pl.GetTurn():
+		player_index += 1;
+		if player_index > Players.size() - 1:
+			player_index = 0;
+		#var pl_next = GetPlayer(player_index);
+		#pl_next.SetTurn(true);
+		pl.SetTurn(false);
+		return true;
+	else:
+		return false;
+
+
 func GetPlayer(index: int):
 	return Players[index];
 
@@ -138,6 +155,10 @@ func SetPlayer(index: int, pl: Player):
 func ResetPlayer():
 	Players.clear();
 	Players.resize(Roads.size());
+
+func RemovePlayer(index: int):
+	GetPlayerTurn(index);
+	Players.remove(index);
 
 
 func to_string():

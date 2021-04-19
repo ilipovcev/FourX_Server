@@ -58,7 +58,7 @@ func _Peer_Disconnected(id):
 	print("User ", id, " disconnected");
 	ScreenText("User " + String(id) + " disconnected");
 	var pl: Player = GetPlayerById(id);
-	rpc("PlayerLeftGame", pl.GetName());
+	GameMap.RemovePlayer(players.find(pl));
 	players.erase(pl);
 
 
@@ -75,7 +75,11 @@ remote func RegPlayer(name):
 	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
 	pl = GameMap.GetPlayer(players.size()-1);
 	players[players.size()-1] = pl;
-	rpc_id(idPlayer, "OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin(), players.size()-1)
+	
+	GameMap.SetPlayerTurn(0);
+	send_players_turn_state();
+
+	rpc("OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin(), players.size()-1)
 	rpc("get_states", get_players_state());
 
 	print("Players count: ", players.size());
@@ -97,19 +101,34 @@ func get_players_state():
 	return states;
 
 
-
 remote func IsRoll():
 	var rng = RandomNumberGenerator.new();
 	rng.randomize();
 	var steps_number = rng.randi_range(1, 6);
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);
+	send_players_turn_state();
 
-	GameMap.MovePlayer(players.find(pl), steps_number);
-	rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
+	if GameMap.GetPlayerTurn(players.find(pl)):
+		GameMap.MovePlayer(players.find(pl), steps_number);
+		rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
+		rpc("get_states", get_players_state());
+		send_players_turn_state();
+	else: 
+		print("Ход другого игрока!");
+
 	
+func send_players_turn_state():
+	for pl in players:
+		rpc_id(pl.GetId(), "is_turn", pl.GetTurn());
+
 
 func PlayersDone():
+	var rng = RandomNumberGenerator.new();
+	rng.randomize();
+	GameMap.SetPlayerTurn(rng.randi() % players.size());
+
 	print("All players connected")
 	ScreenText("All players connected")
 	#rpc("StartGame")
+

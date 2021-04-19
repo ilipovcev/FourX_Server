@@ -1,9 +1,11 @@
+extends Node
 class_name Player
 
 var Health: int = 10;
 var Nick: String = "Unnamed";
 var Id: int;
 var Origin: Vector2;
+var Turn: bool = false;
 
 func OnTakeDamage(dmg: int):
 	Health -= dmg;
@@ -16,7 +18,7 @@ func OnTakeHealth(hp: int):
 	print("Игрок ", Nick, " получил ", hp, " здоровья. (", Health, "HP)" );
 
 func OnWin():
-	print("Игрок ", Nick, " выиграл.")
+	print("Игрок ", Nick, " выиграл.");
 	
 func OnDeath():
 	print("Игрок ", Nick, " умер.");
@@ -46,3 +48,9 @@ func SetId(id):
 
 func GetId():
 	return Id;
+
+func SetTurn(is_turn: bool):
+	Turn = is_turn;
+
+func GetTurn():
+	return Turn;
