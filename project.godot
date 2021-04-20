@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Reference",
+"base": "Node",
 "class": "Cell",
 "language": "GDScript",
 "path": "res://World/Cell.gd"
@@ -39,7 +39,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://World/Map.gd"
 }, {
-"base": "Reference",
+"base": "Node",
 "class": "Player",
 "language": "GDScript",
 "path": "res://World/Player.gd"

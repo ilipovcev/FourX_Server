@@ -75,12 +75,8 @@ remote func RegPlayer(name):
 	rpc_id(idPlayer, "OnMapLoaded", GameMap.to_string());
 	pl = GameMap.GetPlayer(players.size()-1);
 	players[players.size()-1] = pl;
-	
-	GameMap.SetPlayerTurn(0);
-	send_players_turn_state();
 
-	rpc("OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin(), players.size()-1)
-	rpc("get_states", get_players_state());
+	rpc("OnRegPlayer", pl.GetName(), pl.GetId(), pl.GetHealth(), pl.GetOrigin());
 
 	print("Players count: ", players.size());
 	ScreenText("Players count: " + String(players.size()));
@@ -97,7 +93,7 @@ func get_players_state():
 	while i <= players.size()-1:
 		states.append(GameMap.GetPlayerState(i));
 		i += 1;
-	print(states);
+	print("Server state: ", states);
 	return states;
 
 
@@ -114,6 +110,21 @@ remote func IsRoll():
 		rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
 		rpc("get_states", get_players_state());
 		send_players_turn_state();
+
+		if GameMap.IsPlayerDead(players.find(pl)):
+			rpc("get_states", get_players_state());
+			players.erase(pl);
+			rpc_id(pl.GetId(), "on_dead");
+			rpc("on_player_dead", pl.GetId());
+			return;
+		if GameMap.IsPlayerWin(players.find(pl)):
+			rpc("get_states", get_players_state());
+			players.erase(pl);
+			rpc_id(pl.GetId(), "on_win");
+			rpc("on_player_win", pl.GetId());
+			rpc("stop_game");
+			GameMap.ResetPlayer();
+			get_tree().set_network_peer(null);
 	else: 
 		print("Ход другого игрока!");
 
@@ -130,5 +141,7 @@ func PlayersDone():
 
 	print("All players connected")
 	ScreenText("All players connected")
-	#rpc("StartGame")
-
+	
+	rpc("StartGame", get_players_state());
+	rpc("get_states", get_players_state());
+	send_players_turn_state();

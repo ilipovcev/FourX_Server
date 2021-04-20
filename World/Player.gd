@@ -1,27 +1,37 @@
 extends Node
 class_name Player
 
-var Health: int = 10;
+var Health: int = 6;
 var Nick: String = "Unnamed";
 var Id: int;
 var Origin: Vector2;
 var Turn: bool = false;
+var death: bool = false;
+var win: bool = false;
 
 func OnTakeDamage(dmg: int):
 	Health -= dmg;
 	print("Игрок ", Nick, " получил ", dmg, " урона. (", Health, "HP)");
 	if Health <= 0:
-		OnDeath();
+		SetDeath();
 
 func OnTakeHealth(hp: int):
 	Health += hp;
 	print("Игрок ", Nick, " получил ", hp, " здоровья. (", Health, "HP)" );
 
-func OnWin():
+func SetWin():
+	win = true;
 	print("Игрок ", Nick, " выиграл.");
+
+func IsWin():
+	return win;
 	
-func OnDeath():
+func SetDeath():
+	death = true;
 	print("Игрок ", Nick, " умер.");
+
+func IsDeath():
+	return death;
 
 func SetName(name: String):
 	Nick = name;

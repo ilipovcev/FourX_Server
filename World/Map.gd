@@ -79,7 +79,7 @@ func LoadFromJson(map):
 	
 	var RoadsCount = map['Roads'].size();
 	Roads.resize(RoadsCount);
-	Players.resize(RoadsCount); # Сколько путей, столько и игроков
+	Players.resize(RoadsCount);
 	for i in range(RoadsCount):
 		var road: Road = Road.new();
 		for j in range(map['Roads'][i].size()):
@@ -125,7 +125,7 @@ func MovePlayer(index: int, rng: int):
 
 func GetPlayerState(player_index: int):
 	var pl = GetPlayer(player_index);
-	var player_state = [pl.GetName(), pl.GetId(), pl.GetOrigin(), pl.GetHealth()];
+	var player_state = [pl.GetName(), pl.GetId(), pl.GetOrigin(), pl.GetHealth(), player_index];
 	return player_state;
 
 func SetPlayerTurn(player_index: int):
@@ -137,12 +137,27 @@ func GetPlayerTurn(player_index: int):
 		player_index += 1;
 		if player_index > Players.size() - 1:
 			player_index = 0;
-		#var pl_next = GetPlayer(player_index);
-		#pl_next.SetTurn(true);
+		var pl_next = GetPlayer(player_index);
+		pl_next.SetTurn(true);
 		pl.SetTurn(false);
 		return true;
 	else:
 		return false;
+
+
+func IsPlayerDead(player_index: int):
+	var pl = GetPlayer(player_index);
+	if pl.IsDeath():
+		RemovePlayer(player_index);
+		return true;
+	return false;
+
+func IsPlayerWin(player_index: int):
+	var pl = GetPlayer(player_index);
+	if pl.IsWin():
+		RemovePlayer(player_index);
+		return true;
+	return false;
 
 
 func GetPlayer(index: int):
@@ -150,7 +165,7 @@ func GetPlayer(index: int):
 
 func SetPlayer(index: int, pl: Player):
 	Players[index] = pl;
-	pl.SetOrigin(GetRoad(index).GetStep(index).GetCoords());
+	pl.SetOrigin(GetRoad(index).GetStep(0).GetCoords());
 
 func ResetPlayer():
 	Players.clear();
