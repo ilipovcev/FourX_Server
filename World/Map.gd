@@ -124,7 +124,7 @@ func MovePlayer(index: int, rng: int):
 	return GetRoad(index).Move(GetPlayer(index), rng);
 
 func GetPlayerState(player_index: int):
-	var pl = GetPlayer(player_index);
+	var pl: Player = GetPlayer(player_index);
 	var player_state = [pl.GetName(), pl.GetId(), pl.GetOrigin(), pl.GetHealth(), player_index];
 	return player_state;
 
@@ -134,6 +134,7 @@ func SetPlayerTurn(player_index: int):
 func GetPlayerTurn(player_index: int):
 	var pl = GetPlayer(player_index);
 	if pl.GetTurn():
+		print("Ход игрока ", player_index);
 		player_index += 1;
 		if player_index > Players.size() - 1:
 			player_index = 0;
@@ -155,7 +156,6 @@ func IsPlayerDead(player_index: int):
 func IsPlayerWin(player_index: int):
 	var pl = GetPlayer(player_index);
 	if pl.IsWin():
-		RemovePlayer(player_index);
 		return true;
 	return false;
 
@@ -172,7 +172,6 @@ func ResetPlayer():
 	Players.resize(Roads.size());
 
 func RemovePlayer(index: int):
-	GetPlayerTurn(index);
 	Players.remove(index);
 
 

@@ -34,20 +34,16 @@ func PrintMap():
 func ScreenText(text):
 	get_node("Console/ConsoleText").add_text(text)
 	get_node("Console/ConsoleText").newline()
-	
-
-func GetPlayerById(PlId):
-	return players[pls_map[PlId]];
 
 
 func startServer():
-	network.create_server(SERVER_PORT, MAX_PLAYERS)
-	get_tree().set_network_peer(network)
-	print("Server started")
-	ScreenText("Server started")
+	network.create_server(SERVER_PORT, MAX_PLAYERS);
+	get_tree().set_network_peer(network);
+	print("Server started");
+	ScreenText("Server started");
 
-	network.connect("peer_connected", self, "_Peer_Connected")
-	network.connect("peer_disconnected", self, "_Peer_Disconnected")
+	network.connect("peer_connected", self, "_Peer_Connected");
+	network.connect("peer_disconnected", self, "_Peer_Disconnected");
 
 
 func _Peer_Connected(id):
@@ -57,9 +53,13 @@ func _Peer_Connected(id):
 func _Peer_Disconnected(id):
 	print("User ", id, " disconnected");
 	ScreenText("User " + String(id) + " disconnected");
-	var pl: Player = GetPlayerById(id);
-	GameMap.RemovePlayer(players.find(pl));
-	players.erase(pl);
+	
+
+func GetPlayerById(PlId):
+	for i in players:
+		pls_map[i.GetId()] = players.find(i);
+		print("id: ", i.GetId(), ". index: ", players.find(i));
+	return players[pls_map[PlId]];
 
 
 remote func RegPlayer(name):
@@ -103,31 +103,40 @@ remote func IsRoll():
 	var steps_number = rng.randi_range(1, 6);
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);
-	send_players_turn_state();
 
 	if GameMap.GetPlayerTurn(players.find(pl)):
 		GameMap.MovePlayer(players.find(pl), steps_number);
 		rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
 		rpc("get_states", get_players_state());
-		send_players_turn_state();
 
 		if GameMap.IsPlayerDead(players.find(pl)):
-			rpc("get_states", get_players_state());
+			print("Player ", players.find(pl), " is dead");
+			pls_map.erase(pl.GetId());
 			players.erase(pl);
+			rpc("get_states", get_players_state());
 			rpc_id(pl.GetId(), "on_dead");
 			rpc("on_player_dead", pl.GetId());
+			send_players_turn_state();
+			do_roll();
 			return;
+
 		if GameMap.IsPlayerWin(players.find(pl)):
 			rpc("get_states", get_players_state());
-			players.erase(pl);
 			rpc_id(pl.GetId(), "on_win");
 			rpc("on_player_win", pl.GetId());
 			rpc("stop_game");
 			GameMap.ResetPlayer();
 			get_tree().set_network_peer(null);
+			return;
 	else: 
 		print("Ход другого игрока!");
 
+	send_players_turn_state();
+	do_roll();
+
+
+func do_roll():
+	rpc("on_roll");
 	
 func send_players_turn_state():
 	for pl in players:
@@ -145,3 +154,4 @@ func PlayersDone():
 	rpc("StartGame", get_players_state());
 	rpc("get_states", get_players_state());
 	send_players_turn_state();
+	do_roll();

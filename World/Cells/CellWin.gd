@@ -2,10 +2,10 @@ extends Cell
 class_name CellWin
 
 func OnStepOn(pl: Player):
-  pl.OnWin();
+  pl.SetWin();
 
 func OnStepOver(pl: Player):
-  pl.OnWin();
+  pl.SetWin();
 
 func GetType():
   return "win"
