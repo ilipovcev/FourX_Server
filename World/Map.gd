@@ -17,7 +17,7 @@ var rng = RandomNumberGenerator.new();
 func GenerateRoads(map):
 	var cells_array = ["CellDamage", "CellHealth"];
 	randomize();
-	map['Cells'][10][6] = 'CellWin';
+	map['Cells'][9][4] = 'CellWin';
 	for i in range(Size.x):
 		for j in range(Size.y):
 			for e in range(map['Roads'].size()):
@@ -26,36 +26,24 @@ func GenerateRoads(map):
 						map['Cells'][i][j] = cells_array[rng.randi_range(0, cells_array.size()-1)];
 						#print(map['Cells'][i][j], " on ", map['Roads'][e][a])
 	
-	for i in map['Roads'][3].size():
-		print(map['Cells'][map['Roads'][3][i][0]][map['Roads'][3][i][1]], " on ", map['Roads'][3][i]);
+	for i in map['Roads'][0].size():
+		print(map['Cells'][map['Roads'][0][i][0]][map['Roads'][0][i][1]], " on ", map['Roads'][0][i]);
 
-func ConvertMatrixToList(map):
-	var adjList = [];
-	for i in range(Size.x):
-		adjList.append([]);
-		adjList[i].resize(Size.y);
-		for j in range(Size.y):
-			if map['Cells'][i][j]:
-				adjList[i].append(j);
-
-	#print(adjList[0]);
-	#print(adjList[1]);
-	#print(adjList[2]);
-	return adjList;
-				
 
 func LoadFromJson(map):
 	Size = Vector2(map['Size'][0], map['Size'][1]);
+	print("x: ", Size.x)
+	print("y: ", Size.y)
 	
 	if map['Cells'].size() != Size.x:
-		print("АШИПКА. Кривой размер карты.");
+		print("Error");
 		return false;
 	
 	Matrix.resize(Size.x);
 	GenerateRoads(map);
 	for i in range(Size.x):
 		if map['Cells'][i].size() != Size.y:
-			print("АШИПКА. Кривой размер карты.");
+			print("Error");
 			return false;
 		
 		var row: Array = [];
