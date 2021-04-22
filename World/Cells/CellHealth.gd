@@ -6,4 +6,4 @@ func OnStepOn(pl: Player):
 	pl.OnTakeHealth(1);
 
 func GetType():
-	return "heal";
+	return "health";
