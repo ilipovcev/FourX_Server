@@ -103,14 +103,14 @@ remote func IsRoll():
 	var steps_number = rng.randi_range(1, 6);
 	var idPlayer = get_tree().get_rpc_sender_id()
 	var pl: Player = GetPlayerById(idPlayer);
+	var pl_index = players.find(pl);
 
-	if GameMap.GetPlayerTurn(players.find(pl)):
-		GameMap.MovePlayer(players.find(pl), steps_number);
-		rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, players.find(pl));
-		rpc("get_states", get_players_state());
+	if GameMap.GetPlayerTurn(pl_index):
+		GameMap.MovePlayer(pl_index, steps_number);
+		rpc_id(idPlayer, "OnRoll", pl.GetOrigin(), steps_number, pl_index);
 
-		if GameMap.IsPlayerDead(players.find(pl)):
-			print("Player ", players.find(pl), " is dead");
+		if GameMap.IsPlayerDead(pl_index):
+			print("Player ", pl_index, " is dead");
 			pls_map.erase(pl.GetId());
 			players.erase(pl);
 			rpc("get_states", get_players_state());
@@ -120,7 +120,7 @@ remote func IsRoll():
 			do_roll();
 			return;
 
-		if GameMap.IsPlayerWin(players.find(pl)):
+		if GameMap.IsPlayerWin(pl_index):
 			rpc("get_states", get_players_state());
 			rpc_id(pl.GetId(), "on_win");
 			rpc("on_player_win", pl.GetId());
@@ -131,6 +131,7 @@ remote func IsRoll():
 	else: 
 		print("Ход другого игрока!");
 
+	rpc("get_states", get_players_state());
 	send_players_turn_state();
 	do_roll();
 

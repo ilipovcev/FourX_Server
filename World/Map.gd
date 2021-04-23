@@ -161,7 +161,7 @@ func ResetPlayer():
 
 func RemovePlayer(index: int):
 	Players.remove(index);
-
+	Roads.remove(index);
 
 func to_string():
 	return JSON.print(jMap);
