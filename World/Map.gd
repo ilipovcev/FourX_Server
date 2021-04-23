@@ -21,7 +21,7 @@ func GenerateRoads(map):
 	for i in range(Size.x):
 		for j in range(Size.y):
 			for e in range(map['Roads'].size()):
-				for a in range(map['Roads'][e].size()-1):
+				for a in range(1, map['Roads'][e].size()-1):
 					if i == map['Roads'][e][a][0] && j == map['Roads'][e][a][1]:
 						map['Cells'][i][j] = cells_array[rng.randi_range(0, cells_array.size()-1)];
 						#print(map['Cells'][i][j], " on ", map['Roads'][e][a])
