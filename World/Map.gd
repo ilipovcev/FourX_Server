@@ -14,10 +14,35 @@ var Roads: Array;
 var Players: Array;
 var rng = RandomNumberGenerator.new();
 
+func JSON_roads(filename: String):
+	var file = File.new();
+	file.open("res://RoadsJSON/"+filename, File.READ);
+	var json_road = JSON.parse(file.get_as_text()).result;
+	file.close();
+	return json_road;
+
+func SetRoads(map):
+	var pl_1_filename = "Player1_"+String(rng.randi_range(1,2))+".json";
+	var pl_1_json = JSON_roads(pl_1_filename)
+	map['Roads'].push_back(pl_1_json['Road']);
+
+	var pl_2_filename = "Player2_"+String(rng.randi_range(1,2))+".json";
+	var pl_2_json = JSON_roads(pl_2_filename)
+	map['Roads'].push_back(pl_2_json['Road']);
+
+	var pl_3_filename = "Player3_"+String(rng.randi_range(1,2))+".json";
+	var pl_3_json = JSON_roads(pl_3_filename)
+	map['Roads'].push_back(pl_3_json['Road']);
+
+	var pl_4_filename = "Player2_"+String(rng.randi_range(1,2))+".json";
+	var pl_4_json = JSON_roads(pl_4_filename)
+	map['Roads'].push_back(pl_4_json['Road']);
+
 func GenerateRoads(map):
 	var cells_array = ["CellDamage", "CellHealth"];
 	randomize();
-	map['Cells'][9][4] = 'CellWin';
+	SetRoads(map);
+	map['Cells'][10][5] = 'CellWin';
 	for i in range(Size.x):
 		for j in range(Size.y):
 			for e in range(map['Roads'].size()):

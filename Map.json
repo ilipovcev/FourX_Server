@@ -1,0 +1,28 @@
+{
+	"Size": [21, 11],
+	"Cells": [
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"],
+			["Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell", "Cell"]
+		],
+	"Roads": [
+	]
+}

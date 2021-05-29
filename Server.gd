@@ -19,7 +19,7 @@ func _ready():
 func LoadMap():
 	GameMap = Map.new();
 	GameMap.ResetPlayer();
-	return GameMap.LoadFromFile("MapAboutNew.json");
+	return GameMap.LoadFromFile("Map.json");
 
 func PrintMap():
 	var ms: Vector2 = GameMap.GetSize();
