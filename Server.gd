@@ -7,6 +7,7 @@ const MAX_PLAYERS = 4
 var players: Array
 var pls_map = {}
 var GameMap: Map;
+var game_started = false;
 
 func _ready():
 	if !LoadMap():
@@ -24,10 +25,10 @@ func LoadMap():
 func PrintMap():
 	var ms: Vector2 = GameMap.GetSize();
 	var st: String;
-	for i in range(ms.y):
+	for i in range(ms.x):
 		st = "[";
-		for j in range(ms.x):
-			st += GameMap.GetCell(j, i).GetType() + ", ";
+		for j in range(ms.y):
+			st += GameMap.GetCell(i, j).GetType() + ", ";
 		st += "]";
 		ScreenText(st);
 
@@ -35,8 +36,18 @@ func ScreenText(text):
 	get_node("Console/ConsoleText").add_text(text)
 	get_node("Console/ConsoleText").newline()
 
+func ResetServer():
+	GameMap.LoadFromFile("Map.json");
+	GameMap.ResetPlayer();
+	players.clear();
+	pls_map.clear();
+	network.close_connection();
+	game_started = false;
+	startServer();
 
 func startServer():
+	if network.get_connection_status() != network.CONNECTION_DISCONNECTED:
+		network.close_connection();
 	network.create_server(SERVER_PORT, MAX_PLAYERS);
 	get_tree().set_network_peer(network);
 	print("Server started");
@@ -51,15 +62,27 @@ func _Peer_Connected(id):
 	
 	
 func _Peer_Disconnected(id):
+	if (game_started == false):
+		var pl: Player = GetPlayerById(id);
+		var pl_index = players.find(pl);
+		pls_map.erase(pl.GetId());
+		players.erase(pl_index);
+		GameMap.PlayerDisconnected(pl_index);
+
+		var idx = 0;
+		for p in players:
+			GameMap.SetPlayer(idx, p);
+			idx += 1;
+	
 	print("User ", id, " disconnected");
 	ScreenText("User " + String(id) + " disconnected");
 	
 
-func GetPlayerById(PlId):
+func GetPlayerById(id):
 	for i in players:
 		pls_map[i.GetId()] = players.find(i);
 		print("id: ", i.GetId(), ". index: ", players.find(i));
-	return players[pls_map[PlId]];
+	return players[pls_map[id]];
 
 
 remote func RegPlayer(name):
@@ -90,6 +113,7 @@ remote func RegPlayer(name):
 func get_players_state():
 	var states = [];
 	var i = 0;
+	print("get_players_state - ", players.size());
 	while i <= players.size()-1:
 		states.append(GameMap.GetPlayerState(i));
 		i += 1;
@@ -112,7 +136,7 @@ remote func IsRoll():
 		if GameMap.IsPlayerDead(pl_index):
 			print("Player ", pl_index, " is dead");
 			pls_map.erase(pl.GetId());
-			players.erase(pl);
+			players.remove(pl_index);
 			rpc("get_states", get_players_state());
 			rpc_id(pl.GetId(), "on_dead");
 			rpc("on_player_dead", pl.GetId());
@@ -125,8 +149,7 @@ remote func IsRoll():
 			rpc_id(pl.GetId(), "on_win");
 			rpc("on_player_win", pl.GetId());
 			rpc("stop_game");
-			GameMap.ResetPlayer();
-			get_tree().set_network_peer(null);
+			ResetServer();
 			return;
 	else: 
 		print("Ход другого игрока!");
@@ -152,6 +175,7 @@ func PlayersDone():
 	print("All players connected")
 	ScreenText("All players connected")
 	
+	game_started = true;
 	rpc("StartGame", get_players_state());
 	rpc("get_states", get_players_state());
 	send_players_turn_state();

@@ -9,17 +9,20 @@ func GetStep(index: int):
 	return Cells[index];
 	
 func MoveFromIndex(pl: Player, index: int, rng: int):
-	if rng < 1:
-		return -1;
-	if index < 0 || index+rng >= Cells.size():
-		return -1;
+	prints("MoveFromIndex -", "index:", index);
 	
+	if rng < 1 || index < 0:
+		return -1;
+	if index+rng >= Cells.size():
+		rng = Cells.size() - 1 - index;
+	prints("MoveFromIndex -", "rng:", rng);
+
 	Cells[index].OnStepOut(pl);
 	for i in range(1, rng):
 		Cells[index+i].OnStepOver(pl);
 	Cells[index+rng].OnStepOn(pl);
 	pl.SetOrigin(Cells[index+rng].GetCoords());
-	
+	print("MoveFromIndex - origin ", pl.GetOrigin())
 	return index;
 
 func MoveFromVec(pl: Player, from: Vector2, rng: int):

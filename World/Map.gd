@@ -11,8 +11,10 @@ var Matrix = [];
 var Size: Vector2;
 var jMap;
 var Roads: Array;
+var RoadsCount;
 var Players: Array;
 var rng = RandomNumberGenerator.new();
+var players_count;
 
 func JSON_roads(filename: String):
 	var file = File.new();
@@ -34,7 +36,7 @@ func SetRoads(map):
 	var pl_3_json = JSON_roads(pl_3_filename)
 	map['Roads'].push_back(pl_3_json['Road']);
 
-	var pl_4_filename = "Player2_"+String(rng.randi_range(1,2))+".json";
+	var pl_4_filename = "Player4_"+String(rng.randi_range(1,2))+".json";
 	var pl_4_json = JSON_roads(pl_4_filename)
 	map['Roads'].push_back(pl_4_json['Road']);
 
@@ -90,7 +92,7 @@ func LoadFromJson(map):
 		
 		Matrix[i] = row;
 	
-	var RoadsCount = map['Roads'].size();
+	RoadsCount = map['Roads'].size();
 	Roads.resize(RoadsCount);
 	Players.resize(RoadsCount);
 	for i in range(RoadsCount):
@@ -133,8 +135,9 @@ func GetCellByVec(vec: Vector2):
 func GetRoad(index: int):
 	return Roads[index];
 
-func MovePlayer(index: int, rng: int):
-	return GetRoad(index).Move(GetPlayer(index), rng);
+func MovePlayer(index: int, steps_number: int):
+	print("Игроку ", index, " выпало число ", steps_number);
+	return GetRoad(index).Move(GetPlayer(index), steps_number);
 
 func GetPlayerState(player_index: int):
 	var pl: Player = GetPlayer(player_index);
@@ -162,7 +165,7 @@ func GetPlayerTurn(player_index: int):
 func IsPlayerDead(player_index: int):
 	var pl = GetPlayer(player_index);
 	if pl.IsDeath():
-		RemovePlayer(player_index);
+		RemovePlayer(pl);
 		return true;
 	return false;
 
@@ -184,9 +187,17 @@ func ResetPlayer():
 	Players.clear();
 	Players.resize(Roads.size());
 
-func RemovePlayer(index: int):
+func RemovePlayer(pl: Player):
+	var pl_index = Players.find(pl);
+	Players.erase(pl);
+	Roads.remove(pl_index);
+	print("Removed. Size: ", Players.size());
+
+func PlayerDisconnected(index: int):
 	Players.remove(index);
-	Roads.remove(index);
+	Players.resize(4);
+	print("Removed. Size: ", Players.size());
+	
 
 func to_string():
 	return JSON.print(jMap);

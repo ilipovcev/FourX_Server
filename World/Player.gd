@@ -1,7 +1,7 @@
 extends Node
 class_name Player
 
-var Health: int = 6;
+var Health: int = 4;
 var Nick: String = "Unnamed";
 var Id: int;
 var Origin: Vector2;
@@ -50,7 +50,6 @@ func SetOrigin(vec: Vector2):
 	print("Игрок ", Nick, " передвинут на координаты ", vec);
 	
 func GetOrigin():
-	# На клиенте надо плавно перемещать
 	return Origin;
 
 func SetId(id):
